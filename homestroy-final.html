@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home-Stroy | Ремонт на покриви</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700;900&family=Nunito:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET & BASE ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Nunito',sans-serif;background:#0D1117;color:#E8E4DC;line-height:1.6;overflow-x:hidden}
+img{display:block;width:100%;height:100%;object-fit:cover}
+a{text-decoration:none;color:inherit}
+
+/* ─── CSS VARS ─── */
+:root{
+  --red:#C0392B;
+  --red-light:#E74C3C;
+  --dark:#0D1117;
+  --card:#161B22;
+  --muted:#1F2730;
+  --border:rgba(255,255,255,0.07);
+  --text:#E8E4DC;
+  --text-muted:rgba(232,228,220,0.5);
+  --text-dim:rgba(232,228,220,0.35);
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--dark)}
+::-webkit-scrollbar-thumb{background:var(--red);border-radius:3px}
+
+/* ─── SCROLL ANIMATIONS ─── */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .65s ease,transform .65s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-32px);transition:opacity .65s ease,transform .65s ease}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(32px);transition:opacity .65s ease,transform .65s ease}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+.delay-1{transition-delay:.1s}.delay-2{transition-delay:.2s}.delay-3{transition-delay:.3s}.delay-4{transition-delay:.4s}.delay-5{transition-delay:.5s}
+
+/* ─── FLOATING CTA ─── */
+.float-cta{
+  position:fixed;bottom:20px;right:20px;z-index:999;
+  background:var(--red);color:#fff;
+  width:56px;height:56px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(192,57,43,.55);
+  animation:floatBob 3s ease-in-out infinite;
+  border:none;cursor:pointer;
+}
+.float-cta i{font-size:20px}
+@keyframes floatBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+/* ─── TOP BAR ─── */
+.topbar{
+  background:var(--red);
+  padding:9px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:12px;color:#fff;font-weight:600;
+  gap:8px;flex-wrap:wrap;
+}
+.topbar-left{display:flex;gap:16px;flex-wrap:wrap}
+.topbar-left span{display:flex;align-items:center;gap:5px}
+.topbar-right{
+  background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.3);
+  border-radius:4px;padding:3px 10px;font-size:11px;letter-spacing:.05em;white-space:nowrap;
+}
+
+/* ─── NAV ─── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(13,17,23,.97);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 20px;height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-logo-icon{
+  width:38px;height:38px;background:var(--red);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+}
+.nav-logo-icon i{color:#fff;font-size:16px}
+.nav-logo-text{font-family:'Oswald',sans-serif;font-size:19px;font-weight:700;color:#fff;letter-spacing:.02em}
+.nav-logo-text span{color:var(--red)}
+.nav-links{display:none;gap:24px;font-size:13px;color:var(--text-muted)}
+.nav-links a{transition:color .15s}
+.nav-links a:hover{color:#fff}
+.nav-cta{
+  display:flex;align-items:center;gap:7px;
+  background:var(--red);color:#fff;
+  padding:9px 18px;border-radius:8px;
+  font-size:13px;font-weight:700;border:none;cursor:pointer;
+  transition:background .15s,transform .1s;
+}
+.nav-cta:hover{background:#a93226;transform:translateY(-1px)}
+.nav-cta:active{transform:scale(.97)}
+@media(min-width:768px){.nav-links{display:flex}}
+
+/* ─── HERO ─── */
+.hero{
+  position:relative;min-height:92vh;
+  display:flex;flex-direction:column;justify-content:center;
+  overflow:hidden;padding:60px 20px 80px;
+  background:var(--card);
+}
+.hero-bg{
+  position:absolute;inset:0;pointer-events:none;
+}
+.hero-bg::before{
+  content:'';position:absolute;top:-100px;right:-150px;
+  width:500px;height:500px;border-radius:50%;
+  background:rgba(192,57,43,.12);filter:blur(100px);
+}
+.hero-bg::after{
+  content:'';position:absolute;bottom:-80px;left:-100px;
+  width:350px;height:350px;border-radius:50%;
+  background:rgba(192,57,43,.07);filter:blur(80px);
+}
+/* Diagonal bottom cut */
+.hero::after{
+  content:'';position:absolute;bottom:-1px;left:0;right:0;
+  height:60px;background:var(--dark);
+  clip-path:polygon(0 100%,100% 0,100% 100%);
+}
+.hero-inner{position:relative;z-index:2;max-width:700px;margin:0 auto;width:100%}
+.hero-live-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(192,57,43,.15);border:1px solid rgba(192,57,43,.35);
+  border-radius:100px;padding:6px 14px;
+  font-size:12px;color:var(--red-light);font-weight:700;
+  letter-spacing:.05em;text-transform:uppercase;margin-bottom:22px;
+}
+.badge-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--red-light);
+  animation:pulseDot 2s infinite;
+}
+@keyframes pulseDot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.7);opacity:.6}}
+.hero-h1{
+  font-family:'Oswald',sans-serif;font-weight:900;line-height:1.0;
+  font-size:clamp(2.6rem,9vw,5rem);color:#fff;margin-bottom:14px;
+}
+.hero-h1 .accent{color:var(--red-light)}
+.hero-sub{
+  font-size:15px;color:var(--text-muted);line-height:1.7;
+  border-left:3px solid var(--red);padding-left:14px;
+  font-style:italic;margin-bottom:28px;max-width:480px;
+}
+.hero-btns{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:32px}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:9px;
+  background:var(--red);color:#fff;
+  padding:14px 28px;border-radius:10px;
+  font-family:'Oswald',sans-serif;font-size:17px;font-weight:700;
+  letter-spacing:.03em;border:none;cursor:pointer;
+  transition:background .15s,transform .12s,box-shadow .15s;
+  box-shadow:0 4px 20px rgba(192,57,43,.4);
+}
+.btn-primary:hover{background:#a93226;transform:translateY(-2px);box-shadow:0 8px 28px rgba(192,57,43,.5)}
+.btn-primary:active{transform:scale(.97)}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:9px;
+  background:transparent;color:var(--text);
+  padding:14px 22px;border-radius:10px;
+  font-size:15px;font-weight:700;
+  border:1.5px solid rgba(255,255,255,.18);cursor:pointer;
+  transition:border-color .15s,color .15s,transform .12s;
+}
+.btn-secondary:hover{border-color:rgba(255,255,255,.4);color:#fff;transform:translateY(-2px)}
+.trust-pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{
+  display:flex;align-items:center;gap:6px;
+  background:var(--muted);border:1px solid var(--border);
+  border-radius:100px;padding:6px 14px;
+  font-size:12px;color:var(--text-muted);font-weight:600;
+}
+.pill i{color:var(--red-light);font-size:11px}
+
+/* Hero photo card (shown on desktop) */
+.hero-photo-col{display:none}
+@media(min-width:900px){
+  .hero-inner{max-width:1100px;display:grid;grid-template-columns:1fr 420px;gap:56px;align-items:center}
+  .hero-content{max-width:none}
+  .hero-photo-col{display:flex;flex-direction:column;gap:12px}
+  .hero-photo-main{height:280px;border-radius:14px;overflow:hidden;border:1px solid var(--border)}
+  .hero-photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .hero-photo-grid div{height:130px;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+}
+
+/* ─── STATS BAR ─── */
+.stats-bar{
+  background:var(--dark);
+  padding:0 20px;
+}
+.stats-inner{
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(2,1fr);gap:0;
+}
+@media(min-width:600px){.stats-inner{grid-template-columns:repeat(4,1fr)}}
+.stat-item{
+  padding:28px 20px;text-align:center;
+  border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+  transition:background .2s;
+}
+.stat-item:nth-child(2n){border-right:none}
+@media(min-width:600px){
+  .stat-item{border-bottom:none}
+  .stat-item:nth-child(2n){border-right:1px solid var(--border)}
+  .stat-item:last-child{border-right:none}
+}
+.stat-item:hover{background:var(--card)}
+.stat-num{
+  font-family:'Oswald',sans-serif;font-size:2.6rem;font-weight:900;
+  color:var(--red-light);line-height:1;margin-bottom:4px;
+}
+.stat-label{font-size:12px;color:var(--text-dim);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+
+/* ─── SECTION COMMON ─── */
+.section{padding:72px 20px}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-eyebrow{
+  font-size:11px;font-weight:700;color:var(--red-light);
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;
+}
+.section-eyebrow::before{content:'';width:24px;height:2px;background:var(--red-light);border-radius:2px}
+.section-h2{
+  font-family:'Oswald',sans-serif;font-weight:900;
+  font-size:clamp(1.8rem,5vw,3rem);color:#fff;margin-bottom:12px;line-height:1.1;
+}
+.section-desc{font-size:15px;color:var(--text-muted);line-height:1.75;max-width:620px;margin-bottom:36px}
+
+/* ─── ABOUT ─── */
+.about-grid{display:grid;gap:40px;align-items:center}
+@media(min-width:768px){.about-grid{grid-template-columns:1fr 1fr}}
+.about-photo-wrap{
+  position:relative;border-radius:16px;overflow:hidden;
+  height:380px;border:1px solid var(--border);
+}
+.about-photo-wrap::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(13,17,23,.7) 0%,transparent 60%);
+}
+.about-badge{
+  position:absolute;bottom:20px;left:20px;z-index:2;
+  background:var(--red);color:#fff;border-radius:10px;
+  padding:12px 16px;
+}
+.about-badge-num{font-family:'Oswald',sans-serif;font-size:2rem;font-weight:900;line-height:1}
+.about-badge-text{font-size:10px;font-weight:700;letter-spacing:.06em;opacity:.85}
+.about-checklist{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.about-checklist li{
+  display:flex;align-items:center;gap:9px;
+  font-size:13px;color:var(--text-muted);font-weight:600;
+}
+.about-checklist li i{color:var(--red-light);font-size:12px;flex-shrink:0}
+
+/* ─── SERVICES ─── */
+.services-section{background:var(--card)}
+.services-grid{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:560px){.services-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:900px){.services-grid{grid-template-columns:repeat(3,1fr)}}
+.service-card{
+  background:var(--muted);border:1px solid var(--border);border-radius:14px;
+  padding:26px;cursor:pointer;
+  transition:border-color .2s,transform .2s,box-shadow .2s;
+}
+.service-card:hover{
+  border-color:rgba(192,57,43,.5);transform:translateY(-4px);
+  box-shadow:0 12px 32px rgba(192,57,43,.12);
+}
+.service-card.featured{background:var(--red);border-color:transparent}
+.service-card.featured .svc-icon-wrap{background:rgba(255,255,255,.15)}
+.service-card.featured .svc-icon-wrap i{color:#fff}
+.service-card.featured .svc-name{color:#fff}
+.service-card.featured .svc-desc{color:rgba(255,255,255,.75)}
+.svc-icon-wrap{
+  width:48px;height:48px;border-radius:12px;
+  background:rgba(192,57,43,.12);
+  display:flex;align-items:center;justify-content:center;margin-bottom:16px;
+  transition:background .2s;
+}
+.service-card:not(.featured):hover .svc-icon-wrap{background:rgba(192,57,43,.2)}
+.svc-icon-wrap i{color:var(--red-light);font-size:20px}
+.svc-name{font-family:'Oswald',sans-serif;font-weight:700;font-size:18px;color:#fff;margin-bottom:6px}
+.svc-desc{font-size:13px;color:var(--text-muted);line-height:1.6}
+.svc-cta{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-top:14px;font-size:12px;font-weight:700;color:#fff;
+  background:rgba(255,255,255,.15);border-radius:6px;padding:6px 12px;
+  transition:background .15s;
+}
+.svc-cta:hover{background:rgba(255,255,255,.25)}
+
+/* ─── WHY US ─── */
+.why-grid{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:560px){.why-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:900px){.why-grid{grid-template-columns:repeat(3,1fr)}}
+.why-card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:28px 24px;text-align:center;
+  transition:border-color .2s,transform .2s;
+}
+.why-card:hover{border-color:rgba(192,57,43,.4);transform:translateY(-3px)}
+.why-icon{
+  width:56px;height:56px;border-radius:14px;
+  background:rgba(192,57,43,.1);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 16px;
+  transition:background .2s;
+}
+.why-card:hover .why-icon{background:rgba(192,57,43,.2)}
+.why-icon i{color:var(--red-light);font-size:22px}
+.why-title{font-family:'Oswald',sans-serif;font-weight:700;font-size:16px;color:#fff;margin-bottom:6px}
+.why-desc{font-size:12px;color:var(--text-dim);line-height:1.6}
+
+/* ─── EXTRA SERVICES ─── */
+.extra-grid{display:grid;gap:40px;align-items:center}
+@media(min-width:768px){.extra-grid{grid-template-columns:1fr 1fr}}
+.extra-photo{height:360px;border-radius:16px;overflow:hidden;border:1px solid var(--border)}
+.extra-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:28px}
+.extra-list li{
+  display:flex;align-items:center;gap:12px;
+  background:var(--muted);border:1px solid var(--border);
+  border-radius:10px;padding:12px 16px;
+  font-size:14px;color:var(--text-muted);font-weight:600;
+  transition:border-color .2s;
+}
+.extra-list li:hover{border-color:rgba(192,57,43,.35)}
+.extra-list li i{color:var(--red-light);font-size:14px;width:16px;flex-shrink:0}
+
+/* ─── REVIEWS ─── */
+.reviews-section{background:var(--card)}
+.reviews-grid{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:600px){.reviews-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:900px){.reviews-grid{grid-template-columns:repeat(3,1fr)}}
+.review-card{
+  background:var(--muted);border:1px solid var(--border);
+  border-radius:14px;padding:24px;
+  transition:border-color .2s,transform .2s;
+}
+.review-card:hover{border-color:rgba(192,57,43,.35);transform:translateY(-3px)}
+.review-card.featured{border-color:rgba(192,57,43,.4);position:relative}
+.hot-badge{
+  position:absolute;top:-11px;left:20px;
+  background:var(--red);color:#fff;font-size:10px;font-weight:700;
+  padding:3px 10px;border-radius:20px;letter-spacing:.04em;
+}
+.review-stars{display:flex;gap:3px;margin-bottom:14px}
+.review-stars i{color:#F39C12;font-size:13px}
+.review-text{font-size:13px;color:var(--text-muted);line-height:1.7;font-style:italic;margin-bottom:18px}
+.review-author{display:flex;align-items:center;gap:10px;padding-top:14px;border-top:1px solid var(--border)}
+.review-avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(192,57,43,.2);display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;color:var(--red-light);flex-shrink:0;
+}
+.review-name{font-size:13px;font-weight:700;color:#fff}
+.review-source{font-size:11px;color:var(--text-dim)}
+
+/* ─── CONTACT ─── */
+.contact-box{
+  max-width:680px;margin:0 auto;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:20px;padding:36px 24px;
+}
+@media(min-width:600px){.contact-box{padding:48px 48px}}
+.contact-phone{
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  background:var(--red);border-radius:14px;padding:20px;margin-bottom:16px;
+  cursor:pointer;transition:background .15s,transform .12s;
+  box-shadow:0 4px 24px rgba(192,57,43,.4);
+}
+.contact-phone:hover{background:#a93226;transform:translateY(-2px)}
+.contact-phone:active{transform:scale(.98)}
+.contact-phone-num{font-family:'Oswald',sans-serif;font-size:2rem;font-weight:900;color:#fff;line-height:1}
+.contact-phone-label{font-size:12px;color:rgba(255,255,255,.7);font-weight:600;margin-bottom:2px}
+.contact-channels{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.channel{
+  display:flex;align-items:center;gap:12px;
+  background:var(--muted);border:1px solid var(--border);
+  border-radius:12px;padding:14px 16px;cursor:pointer;
+  transition:border-color .15s,transform .12s;
+}
+.channel:hover{border-color:rgba(255,255,255,.2);transform:translateY(-1px)}
+.channel-icon{width:38px;height:38px;border-radius:10px;background:rgba(192,57,43,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.channel-label{font-size:10px;color:var(--text-dim);font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.channel-value{font-size:14px;font-weight:700;color:#fff}
+.free-box{
+  background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.25);
+  border-radius:12px;padding:18px 20px;
+  display:flex;align-items:flex-start;gap:14px;
+}
+.free-box i{color:var(--red-light);font-size:22px;flex-shrink:0;margin-top:2px}
+.free-box-title{font-weight:700;color:var(--red-light);font-size:14px;margin-bottom:4px}
+.free-box-text{font-size:12px;color:var(--text-muted);line-height:1.6}
+
+/* ─── BOTTOM CTA ─── */
+.bottom-cta{
+  background:var(--red);padding:20px;
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+  gap:14px;text-align:center;
+}
+.bottom-cta-text{font-family:'Oswald',sans-serif;font-size:1.3rem;font-weight:700;color:#fff}
+.bottom-cta a{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.3);
+  color:#fff;padding:10px 20px;border-radius:8px;
+  font-size:13px;font-weight:700;transition:background .15s;
+}
+.bottom-cta a:hover{background:rgba(0,0,0,.4)}
+
+/* ─── FOOTER ─── */
+footer{
+  background:rgba(0,0,0,.5);border-top:1px solid var(--border);
+  padding:22px 20px;text-align:center;
+  font-size:11px;color:var(--text-dim);
+}
+.footer-logo{font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;color:rgba(255,255,255,.5);margin-bottom:4px}
+.footer-logo span{color:var(--red)}
+</style>
+</head>
+<body>
+
+<!-- FLOATING PHONE -->
+<a href="tel:0893952269" class="float-cta" aria-label="Обади се">
+  <i class="fa-solid fa-phone"></i>
+</a>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <span><i class="fa-solid fa-phone fa-xs"></i> 0893 952 269</span>
+    <span><i class="fa-solid fa-location-dot fa-xs"></i> Цяла България</span>
+    <span class="hidden-xs"><i class="fa-solid fa-magnifying-glass fa-xs"></i> Безплатен оглед</span>
+  </div>
+  <div class="topbar-right"><i class="fa-solid fa-shield-halved fa-xs"></i> ГАРАНЦИЯ ДО 20Г.</div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-icon"><i class="fa-solid fa-house-chimney"></i></div>
+    <div class="nav-logo-text">Home<span>-Stroy</span></div>
+  </div>
+  <div class="nav-links">
+    <a href="#about">За нас</a>
+    <a href="#services">Услуги</a>
+    <a href="#reviews">Отзиви</a>
+    <a href="#contact">Контакти</a>
+  </div>
+  <a href="tel:0893952269" class="nav-cta">
+    <i class="fa-solid fa-phone fa-sm"></i> Обади се
+  </a>
+</nav>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-live-badge reveal">
+        <span class="badge-dot"></span>
+        <i class="fa-solid fa-circle-check fa-xs"></i>
+        Приема заявки днес
+      </div>
+
+      <h1 class="hero-h1 reveal delay-1">
+        Имаш теч?<br>
+        Ние сме<br>
+        <span class="accent">Решението.</span>
+      </h1>
+
+      <p class="hero-sub reveal delay-2">
+        Ремонт на покриви, хидроизолация и дървени конструкции с договор за качество. Работим в цялата страна!
+      </p>
+
+      <div class="hero-btns reveal delay-3">
+        <a href="tel:0893952269" class="btn-primary">
+          <i class="fa-solid fa-phone fa-sm"></i>
+          0893 952 269
+        </a>
+        <a href="https://wa.me/359893952269" target="_blank" class="btn-secondary">
+          <i class="fa-brands fa-whatsapp" style="color:#25D366;font-size:18px"></i>
+          WhatsApp
+        </a>
+      </div>
+
+      <div class="trust-pills reveal delay-4">
+        <div class="pill"><i class="fa-solid fa-file-contract"></i> Договор</div>
+        <div class="pill"><i class="fa-solid fa-shield-halved"></i> 20г. гаранция</div>
+        <div class="pill"><i class="fa-solid fa-magnifying-glass"></i> Безплатен оглед</div>
+        <div class="pill"><i class="fa-solid fa-map-location-dot"></i> Цяла България</div>
+      </div>
+    </div>
+
+    <!-- Desktop photo column -->
+    <div class="hero-photo-col reveal-right delay-2">
+      <div class="hero-photo-main">
+        <img src="476797915_968589002031165_5293087450323994870_n.jpg" alt="Ремонт покрив" onerror="this.parentElement.style.background='#1F2730'">
+      </div>
+      <div class="hero-photo-grid">
+        <div><img src="476846820_968588758697856_94966446274110990_n.jpg" alt="Покрив" onerror="this.parentElement.style.background='#1F2730'"></div>
+        <div style="background:var(--red);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;border-radius:10px">
+          <div style="font-family:'Oswald',sans-serif;font-size:2.4rem;font-weight:900;color:#fff;line-height:1">20г.</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.8);font-weight:700;letter-spacing:.06em">ГАРАНЦИЯ</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ STATS ══════════ -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item reveal"><div class="stat-num">20+</div><div class="stat-label">Години опит</div></div>
+    <div class="stat-item reveal delay-1"><div class="stat-num">320+</div><div class="stat-label">Доволни клиенти</div></div>
+    <div class="stat-item reveal delay-2"><div class="stat-num">300+</div><div class="stat-label">Поправени покриви</div></div>
+    <div class="stat-item reveal delay-3"><div class="stat-num">20г.</div><div class="stat-label">Макс. гаранция</div></div>
+  </div>
+</div>
+
+<!-- ══════════ ABOUT ══════════ -->
+<section class="section" id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="reveal-left">
+        <div class="about-photo-wrap">
+          <img src="476869148_968588748697857_7380269357924455817_n.jpg" alt="Home-Stroy екип" onerror="this.parentElement.style.background='#1F2730'">
+          <div class="about-badge">
+            <div class="about-badge-num">20г.</div>
+            <div class="about-badge-text">ГАРАНЦИЯ</div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal-right">
+        <p class="section-eyebrow">За нас</p>
+        <h2 class="section-h2">Сигурността на вашия дом е наша отговорност.</h2>
+        <p class="section-desc">Добре дошли в Home-Stroy, където качеството, сигурността и естетиката на вашия дом са наши основни приоритети. С повече от 20 години опит и над 300 ремонтирани покрива, ние сме доверен партньор за всеки обект.</p>
+        <ul class="about-checklist">
+          <li><i class="fa-solid fa-check"></i> Ремонт на покриви</li>
+          <li><i class="fa-solid fa-check"></i> Хидроизолация</li>
+          <li><i class="fa-solid fa-check"></i> Пренареждане керемиди</li>
+          <li><i class="fa-solid fa-check"></i> Навеси и беседки</li>
+          <li><i class="fa-solid fa-check"></i> Дървени конструкции</li>
+          <li><i class="fa-solid fa-check"></i> Огради и фундаменти</li>
+          <li><i class="fa-solid fa-check"></i> Усвояване тераси</li>
+          <li><i class="fa-solid fa-check"></i> Извозване отпадъци</li>
+        </ul>
+        <div style="margin-top:28px">
+          <div style="display:flex;align-items:center;gap:10px;background:var(--muted);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
+            <i class="fa-solid fa-medal" style="color:var(--red-light);font-size:20px"></i>
+            <div>
+              <div style="font-weight:700;color:#fff;font-size:14px">Сертифицирана фирма</div>
+              <div style="font-size:12px;color:var(--text-dim)">Договор за качество на всеки обект</div>
+            </div>
+          </div>
+        </div>
+        <a href="tel:0893952269" class="btn-primary" style="margin-top:24px;display:inline-flex">
+          <i class="fa-solid fa-phone fa-sm"></i> Научете повече
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SERVICES ══════════ -->
+<section class="section services-section" id="services">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:40px">
+      <p class="section-eyebrow" style="justify-content:center">Услуги</p>
+      <h2 class="section-h2">Висококачествени ремонти<br>с гарантирано качество</h2>
+    </div>
+    <div class="services-grid">
+
+      <div class="service-card reveal">
+        <div class="svc-icon-wrap"><i class="fa-solid fa-house-chimney-crack"></i></div>
+        <div class="svc-name">Ремонт на стар покрив</div>
+        <div class="svc-desc">Диагностика, частичен или пълен ремонт. Намираме и отстраняваме течовете бързо и трайно.</div>
+      </div>
+
+      <div class="service-card reveal delay-1">
+        <div class="svc-icon-wrap"><i class="fa-solid fa-house-chimney"></i></div>
+        <div class="svc-name">Изграждане на нов покрив</div>
+        <div class="svc-desc">От дървена конструкция до последната керемида. Качествени материали и гаранция.</div>
+      </div>
+
+      <div class="service-card reveal delay-2">
+        <div class="svc-icon-wrap"><i class="fa-solid fa-droplet-slash"></i></div>
+        <div class="svc-name">Хидроизолация</div>
+        <div class="svc-desc">Покрив без течове с гаранция до 15 години. Битумни мембрани и модерни технологии.</div>
+      </div>
+
+      <div class="service-card reveal delay-1">
+        <div class="svc-icon-wrap"><i class="fa-solid fa-rotate"></i></div>
+        <div class="svc-name">Пренареждане керемиди</div>
+        <div class="svc-desc">Пренареждане с оригинални или нови керемиди ТОНДАХ и други водещи марки.</div>
+      </div>
+
+      <div class="service-card reveal delay-2">
+        <div class="svc-icon-wrap"><i class="fa-solid fa-tree"></i></div>
+        <div class="svc-name">Навеси и беседки</div>
+        <div class="svc-desc">Дървени и метални конструкции, навеси, беседки и усвояване на тераси.</div>
+      </div>
+
+      <div class="service-card featured reveal delay-3">
+        <div class="svc-icon-wrap"><i class="fa-solid fa-magnifying-glass"></i></div>
+        <div class="svc-name">Безплатен оглед!</div>
+        <div class="svc-desc" style="color:rgba(255,255,255,.8)">Идваме на място без ангажимент. Консултация и оценка — напълно безплатно!</div>
+        <a href="tel:0893952269" class="svc-cta">
+          <i class="fa-solid fa-phone fa-xs"></i> Обади се сега
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ WHY US ══════════ -->
+<section class="section" style="background:var(--dark)">
+  <div class="section-inner">
+    <div style="margin-bottom:40px">
+      <p class="section-eyebrow">Защо ние?</p>
+      <h2 class="section-h2">6 причини да изберете Home-Stroy</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal">
+        <div class="why-icon"><i class="fa-solid fa-gem"></i></div>
+        <div class="why-title">Висококачествени материали</div>
+        <div class="why-desc">Работим само с доказани марки и сертифицирани материали.</div>
+      </div>
+      <div class="why-card reveal delay-1">
+        <div class="why-icon"><i class="fa-solid fa-clock"></i></div>
+        <div class="why-title">Спазване на срокове</div>
+        <div class="why-desc">Завършваме навреме — без изненади и забавяния.</div>
+      </div>
+      <div class="why-card reveal delay-2">
+        <div class="why-icon"><i class="fa-solid fa-hard-hat"></i></div>
+        <div class="why-title">Обучени специалисти</div>
+        <div class="why-desc">Екипът ни има над 20 години опит в покривни дейности.</div>
+      </div>
+      <div class="why-card reveal delay-1">
+        <div class="why-icon"><i class="fa-solid fa-calendar-check"></i></div>
+        <div class="why-title">Оглед в удобно време</div>
+        <div class="why-desc">Идваме когато ви е удобно — включително събота и неделя.</div>
+      </div>
+      <div class="why-card reveal delay-2">
+        <div class="why-icon"><i class="fa-solid fa-headset"></i></div>
+        <div class="why-title">Винаги на линия</div>
+        <div class="why-desc">Отговаряме бързо. Обади се или пиши в WhatsApp.</div>
+      </div>
+      <div class="why-card reveal delay-3">
+        <div class="why-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <div class="why-title">20 години гаранция</div>
+        <div class="why-desc">Договор за качество и максимална гаранция на всеки обект.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ EXTRA SERVICES ══════════ -->
+<section class="section" style="background:var(--card)" id="extra">
+  <div class="section-inner">
+    <div class="extra-grid">
+      <div class="reveal-left">
+        <p class="section-eyebrow">Допълнителни услуги</p>
+        <h2 class="section-h2">Също така предлагаме:</h2>
+        <p class="section-desc">Пълен спектър от покривни и строителни услуги — от прецизни ремонти до нови конструкции.</p>
+        <ul class="extra-list">
+          <li><i class="fa-solid fa-wrench"></i> Частични и основни покривни ремонти</li>
+          <li><i class="fa-solid fa-rotate"></i> Пренареждане на керемиди</li>
+          <li><i class="fa-solid fa-droplet-slash"></i> Хидроизолация на покрив</li>
+          <li><i class="fa-solid fa-magnifying-glass"></i> Откриване и отстраняване на течове</li>
+          <li><i class="fa-solid fa-snowflake"></i> Смяна на капандури</li>
+          <li><i class="fa-solid fa-trash"></i> Извозване на строителни отпадъци</li>
+        </ul>
+        <a href="tel:0893952269" class="btn-primary">
+          <i class="fa-solid fa-phone fa-sm"></i> Научете повече
+        </a>
+      </div>
+      <div class="reveal-right">
+        <div class="extra-photo">
+          <img src="499922143_1042426874647377_9043520086305589311_n.jpg" alt="Навес Home-Stroy" onerror="this.parentElement.style.background='#252A30'">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ REVIEWS ══════════ -->
+<section class="section reviews-section" id="reviews">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:40px">
+      <p class="section-eyebrow" style="justify-content:center">Реални клиенти</p>
+      <h2 class="section-h2">Те ни вярват</h2>
+    </div>
+    <div class="reviews-grid">
+
+      <div class="review-card reveal">
+        <div class="review-stars">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+        </div>
+        <p class="review-text">"Коректно отношение от началото до края на проекта. Момчетата направиха страхотен покрив и бих препоръчал фирмата на всеки."</p>
+        <div class="review-author">
+          <div class="review-avatar">GJ</div>
+          <div>
+            <div class="review-name">George Jurov</div>
+            <div class="review-source"><i class="fa-brands fa-facebook fa-xs"></i> Facebook препоръка</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card featured reveal delay-1">
+        <div class="hot-badge"><i class="fa-solid fa-fire fa-xs"></i> Топ отзив · 18 харесвания</div>
+        <div class="review-stars">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+        </div>
+        <p class="review-text">"Искам да кажа, че тази фирма ми прави покрива. Коректни, точни, много съм доволна, благодаря Ви!"</p>
+        <div class="review-author">
+          <div class="review-avatar">VA</div>
+          <div>
+            <div class="review-name">Viktoria Asen Asenovi</div>
+            <div class="review-source"><i class="fa-brands fa-facebook fa-xs"></i> Facebook · 18 харесвания</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card reveal delay-2">
+        <div class="review-stars">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+        </div>
+        <p class="review-text">"Благодарим за отзивчивостта, бързите и коректни професионални умения, съобразителността и подход!"</p>
+        <div class="review-author">
+          <div class="review-avatar">АВ</div>
+          <div>
+            <div class="review-name">Ахил – волей</div>
+            <div class="review-source"><i class="fa-brands fa-facebook fa-xs"></i> Facebook отзив</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CONTACT ══════════ -->
+<section class="section" id="contact" style="background:var(--dark)">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:36px">
+      <p class="section-eyebrow" style="justify-content:center">Свържете се</p>
+      <h2 class="section-h2">Готови сме да помогнем</h2>
+    </div>
+    <div class="contact-box reveal">
+      <a href="tel:0893952269" class="contact-phone">
+        <i class="fa-solid fa-phone" style="color:#fff;font-size:28px"></i>
+        <div>
+          <div class="contact-phone-label">Обадете се сега</div>
+          <div class="contact-phone-num">0893 952 269</div>
+        </div>
+      </a>
+      <div class="contact-channels">
+        <a href="https://wa.me/359893952269" target="_blank" class="channel">
+          <div class="channel-icon"><i class="fa-brands fa-whatsapp" style="color:#25D366;font-size:18px"></i></div>
+          <div>
+            <div class="channel-label">WhatsApp</div>
+            <div class="channel-value">Пишете</div>
+          </div>
+        </a>
+        <a href="https://www.facebook.com/homestroy" target="_blank" class="channel">
+          <div class="channel-icon"><i class="fa-brands fa-facebook" style="color:#4267B2;font-size:18px"></i></div>
+          <div>
+            <div class="channel-label">Facebook</div>
+            <div class="channel-value">Home-Stroy</div>
+          </div>
+        </a>
+      </div>
+      <div class="free-box">
+        <i class="fa-solid fa-circle-check"></i>
+        <div>
+          <div class="free-box-title">Безплатен оглед и консултация!</div>
+          <div class="free-box-text">Обадете се или пишете на лично съобщение. Идваме на място — без ангажимент, без такса. Договор за качество и гаранция до 20 години на всеки обект.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
+<div class="bottom-cta">
+  <span class="bottom-cta-text"><i class="fa-solid fa-rocket" style="font-size:18px;vertical-align:middle"></i> Готови? Обадете се сега!</span>
+  <a href="tel:0893952269"><i class="fa-solid fa-phone fa-sm"></i> 0893 952 269</a>
+  <a href="https://wa.me/359893952269" target="_blank"><i class="fa-brands fa-whatsapp fa-sm"></i> WhatsApp</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Home<span>-Stroy</span></div>
+  © 2025 Home-Stroy · Ремонт на покриви · Хидроизолация · Цяла България
+</footer>
+
+<!-- SCROLL ANIMATION JS -->
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
